@@ -33,7 +33,7 @@ const user_create = async (req, res) => {
                 const token = jwt.sign({
                     to: email,
                 }, 'secret', { expiresIn: '30m' }, data.parsed.JWT_TOKEN_SECRET, { algorithm: 'HS256' })
-                const url = `http://localhost:3001/Confirmation_Acount?${token}&email=${email}`
+                const url = `http://localhost:3001/Confirmation_Acount?${token}`
                 await transporter.sendMail({
                     from: '"🧑🏻‍💻FdezDev🧑🏻‍💻" <211119@ids.upchiapas.edu.mx>', // sender address
                     to: email, // list of receivers
@@ -387,6 +387,7 @@ const user_create = async (req, res) => {
                 
             }
             emailconfirm();
+
         })
         .catch(err => {
             res.status(400).send(err)
@@ -395,16 +396,10 @@ const user_create = async (req, res) => {
 
 const confirmation = async (req, res) => {
 
-
-
     const confi = req.body.valor;
-    const email = req.body.email;
     if (confi === 'false') {
-        // getUser.destroy({
-        //     where: {
-        //         email: req.body.email
-        //     }
-        // })
+        const eliminar = 
+
         
         console.log('confirmation: ' + confi);
 

@@ -7,7 +7,8 @@ import express from 'express';
 
 import user from './routes/user.routes.js';
 import email from './routes/email.routes.js';
-import img from './routes/img.routes.js';
+import produc from "./routes/product.routes.js";
+
 
 
 const app = express();
@@ -16,7 +17,7 @@ app.use(express.json());
 // ROUTERS
 app.use('/api/user', user);
 app.use('/api/email', email);
-app.use('/api/img', img);
+app.use("/api/product", produc);
 // app.use('/api/profile', middleware, profile);
 
 
