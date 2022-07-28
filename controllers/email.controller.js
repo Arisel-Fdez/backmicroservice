@@ -1,13 +1,15 @@
 import { transporter } from '../config/mailer.js'
+import { v4 as uuidv4 } from "uuid";
 
 
-
-const email = async (req, res) => {
-    const url = `http://localhost:3001/Reset_pass`
-    const { to, } = req.body
+const email_password = async (req, res) => {
+    const token = uuidv4();
+    const email = req.body.email;
+    const url = `http://localhost:3001/Reset_pass?${token}&email=${email}`
+    console.log(email)
     await transporter.sendMail({
         from: '"🧑🏻‍💻FdezDev🧑🏻‍💻" <211119@ids.upchiapas.edu.mx>', // sender address
-        to, // list of receivers
+        to: email, // list of receivers
         subject: "🔑Password Recovery🔑", // Subject line
         html: `<!doctype html>
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -359,4 +361,4 @@ const email = async (req, res) => {
     return res.status(200).json({ succes: 'Correo enviado Con exito' });
 
 }
-export const emailController = { email };
+export const emailController = { email_password };

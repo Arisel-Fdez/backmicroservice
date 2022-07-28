@@ -9,6 +9,10 @@ const User = getData.sequelizeClient.define('cat_users', {
         allowNull: false,
         primaryKey: true
     },
+    validat: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -25,11 +29,6 @@ const User = getData.sequelizeClient.define('cat_users', {
             arg: true,
             msg: ''
         },
-        validate: {
-            notNull: {
-                msg: 'Ingrese un correo'
-            }
-        }
     },
     password: {
         type: DataTypes.STRING,
@@ -54,36 +53,5 @@ const User = getData.sequelizeClient.define('cat_users', {
 
 });
 
-const User_Recovery = getData.sequelizeClient.define('cat_user_Recovery', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
-        primaryKey: true
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: {
-            arg: true,
-            msg: ''
-        },
-        validate: {
-            notNull: {
-                msg: 'Ingrese un correo'
-            }
-        }
-    },
-    token: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-
-}, {
-    tableName: 'cat_user_Recovery',
-    freezeTableName: true,
-
-});
-
-
 export const getUser = User;
+

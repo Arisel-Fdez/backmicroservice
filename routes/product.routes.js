@@ -9,17 +9,9 @@ const jsonParser = bodyParser.json();
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./assets/img");
-  },
-  filename: (req, file, cb) => {
-    const ext = file.originalname.split(".").pop();
-    cb(null, `${file.originalname}`);
-  },
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
 /**
  * @openapi
  * '/api/product/create':
@@ -35,7 +27,7 @@ const upload = multer({ storage });
  *            type: object
  *            required:
  *              - name
- *              - title
+ *              - nameProduc
  *              - description
  *              - price
  *              - amount
@@ -43,19 +35,19 @@ const upload = multer({ storage });
  *              name:
  *                type: string
  *                format: binary
- *                default: img
- *              title:
- *                type: string
- *                default: JavaScript desde Cero
+ *                default: name
+ *              nameProduc:
+ *                 type: string
+ *                 default: lol
  *              description:
  *                type: string
- *                default: aprende javascript con este gran curso
+ *                default: producto descripcion
  *              price:
  *                type: integer
- *                default: 10
+ *                default: 200
  *              amount:
  *                 type: integer
- *                 default: 100
+ *                 default: 10
  *     responses:
  *      200:
  *        description: Create
@@ -68,8 +60,6 @@ const upload = multer({ storage });
 router.post("/create", upload.single("name"), (req, res) =>
   producController.produc_create(req, res, upload)
 );
-
-
 /**
  * @openapi
  * '/api/product/update':
@@ -165,4 +155,20 @@ router.delete("/delete", (req, res) =>
   producController.Product_delete(req, res, upload)
 );
 
+/**
+ * @openapi
+ * '/api/product/img':
+ *  get:
+ *     tags:
+ *     - Product
+ *     summary: visualizar img
+ *     responses:
+ *      200:
+ *        description: update
+ *      400:
+ *        description: Bad Request
+ *      404:
+ *        description: Not Found
+ */
+ router.get("/img", (req, res) => producController.getImage(req, res));
 export default router;

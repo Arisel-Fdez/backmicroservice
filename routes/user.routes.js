@@ -142,6 +142,8 @@ router.post('/login', (req, res) => userController.user_login(req, res));
  *        description: Not Found
  */
  router.post('/config', (req, res) => userController.confirmation(req, res));
+ 
+ router.get('/view', (req, res) => userController.user_view(req, res));
 
 export default router;
 

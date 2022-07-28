@@ -36,6 +36,6 @@ import { emailController } from '../controllers/email.controller.js';
 
 const router = Router();
 
-router.post('/send', async (req, res) =>{emailController.email(req, res)})
+router.post('/send', async (req, res) =>{emailController.email_password(req, res)})
 
 export default router

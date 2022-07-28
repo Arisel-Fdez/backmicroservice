@@ -5,8 +5,6 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { getUser } from '../models/user.model.js'
 import { transporter } from '../config/mailer.js'
-import { Console } from 'console';
-import console from 'console';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,12 +26,12 @@ const user_create = async (req, res) => {
         { fields: ['name', 'email', 'password'] })
         .then(users => {
             res.send(users)
-            
+
             const emailconfirm = async (res) => {
                 const token = jwt.sign({
                     to: email,
                 }, 'secret', { expiresIn: '30m' }, data.parsed.JWT_TOKEN_SECRET, { algorithm: 'HS256' })
-                const url = `http://localhost:3001/Confirmation_Acount?${token}`
+                const url = `http://localhost:3001/Confirmation_Acount?${token}&email=${email}`
                 await transporter.sendMail({
                     from: '"🧑🏻‍💻FdezDev🧑🏻‍💻" <211119@ids.upchiapas.edu.mx>', // sender address
                     to: email, // list of receivers
@@ -384,7 +382,7 @@ const user_create = async (req, res) => {
                     </html>`
 
                 })
-                
+
             }
             emailconfirm();
 
@@ -394,21 +392,50 @@ const user_create = async (req, res) => {
         });
 };
 
-const confirmation = async (req, res) => {
 
+
+const confirmation = async (req, res) => {
+    const email = req.body.email;
     const confi = req.body.valor;
     if (confi === 'false') {
-        const eliminar = 
-
-        
-        console.log('confirmation: ' + confi);
+        console.log('confirmations failed')
+        getUser
+            .destroy({ where: { email: email } })
+            .then((r) => {
+                res.status(200).json({ message: "Deleted successfully" });
+            })
+            .catch((err) => {
+                res.status(400).send(err);
+            });
 
     }
 
     if (confi === 'true') {
-        console.log('confirmation confirmed');
+        getUser.findOne({ where: { email: email } })
+            .then(users => {
+                users.update({ validat: (confi) })
+                res.status(200).json({ message: 'Usuario Confirmado' })
+            })
+            .catch((err) => {
+                res.status(400).json({ err: 'Usuario Confirmado Error' })
+            });
+
     }
+
 }
+
+
+const user_validat = async function (req, res) {
+    getUser
+        .findAll()
+        .then((r) => {
+            //res.send(r);
+            r.status(200).json(r.name)
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+};
 
 
 
@@ -418,8 +445,8 @@ const confirmation = async (req, res) => {
 
 
 const user_update = (req, res) => {
-
-    getUser.findOne({ where: { email: req.body.email } })
+    const email = req.body.email
+    getUser.findOne({ where: { email: email } })
         .then(users => {
             users.update({ password: bcryptjs.hashSync(req.body.password, 10) })
             res.status(200).json({ err: 'contraseña Actualizada' })
@@ -436,21 +463,25 @@ const user_login = async (req, res) => {
     const user = await getUser.findOne({ where: { email: req.body.email } });
     if (user) {
         const validPassword = bcryptjs.compareSync(req.body.password, user.password);
-        if (validPassword) {
-            const token = jwt.sign({
-                sub: user.name,
-                id: user.id,
-            }, 'secret', { expiresIn: '30m' }, data.parsed.JWT_TOKEN_SECRET, { algorithm: 'HS256' })
-            user.token = token;
+        if (user.validat === true) {
+            if (validPassword) {
+                const token = jwt.sign({
+                    sub: user.name,
+                    id: user.id,
+                }, 'secret', { expiresIn: '30m' }, data.parsed.JWT_TOKEN_SECRET, { algorithm: 'HS256' })
+                user.token = token;
 
-            res.header('auth-token', token).json({
-                error: null,
-                data: { token, user: user.id }
-            });
+                res.header('auth-token', token).json({
+                    error: null,
+                    data: { token, user: user.id, name: user.name, validate: user.validate }
+                });
 
-        }
-        else {
-            return res.status(400).json({ error: 'contraseña no válida' })
+            }
+            else {
+                return res.status(400).json({ error: 'contraseña no válida' })
+            }
+        } else {
+            return res.status(400).json({ error: "Usuario no verificado" });
         }
     }
     else {
@@ -460,4 +491,10 @@ const user_login = async (req, res) => {
 
 };
 
-export const userController = { user_create, user_login, user_update, confirmation };
+
+
+
+
+
+
+export const userController = { user_create, user_login, user_update, confirmation, user_validat };

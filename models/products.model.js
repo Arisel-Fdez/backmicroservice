@@ -15,7 +15,7 @@ const products = getData.sequelizeClient.define(
         type: DataTypes.STRING,
         allowNull: true,
       },
-      title: {
+      nameProduc: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
