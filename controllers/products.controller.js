@@ -82,8 +82,8 @@ const produc_create = async function (req, res, upload) {
 
 };
 const Product_update = (req, res) => {
+
   const id = req.body.id;
-  const name = req.file.originalname;
   const nameProduc = req.body.nameProduc;
   const description = req.body.description;
   const price = req.body.price;
@@ -91,11 +91,11 @@ const Product_update = (req, res) => {
   getProduc.products
     .findOne({ where: { id: id } })
     .then((product) => {
-      product.update({ name: name,nameProduc: nameProduc, description: description, price: price, amount: amount })
+      product.update({nameProduc: nameProduc, description: description, price: price, amount: amount })
       res.status(200).json({ successfully: 'Datos Actualizados' });
     })
     .catch((err) => {
-      err.status(400).json({ err: 'Error al actualizar'});
+      console.log(err);
     })
 };
 

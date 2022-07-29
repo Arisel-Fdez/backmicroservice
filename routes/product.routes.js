@@ -75,7 +75,6 @@ router.post("/create", upload.single("name"), (req, res) =>
  *            type: object
  *            required:
  *              -id
- *              - name
  *              - nameProduc
  *              - description
  *              - price
@@ -84,10 +83,6 @@ router.post("/create", upload.single("name"), (req, res) =>
  *              id:
  *                type: UUID
  *                default:
- *              name:
- *                type: string
- *                format: binary
- *                default: img
  *              nameProduc:
  *                type: string
  *                default: object
@@ -160,3 +155,7 @@ router.delete("/delete", (req, res) =>
 );
 
 export default router;
+
+
+
+
