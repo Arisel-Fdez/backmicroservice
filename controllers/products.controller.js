@@ -1,4 +1,4 @@
-import path from "path";
+import path, { resolve } from "path";
 import dotenv from "dotenv";
 import { dataEnv } from "../config/env.config.js";
 import { fileURLToPath } from "url";
@@ -55,9 +55,10 @@ const produc_create = async function (req, res, upload) {
   await s3.send(command)
   console.log(params.ContentType)
 
-  var urlsss = `https://instasam-demo.s3.us-east-2.amazonaws.com/${params.Key}`;
+  var urlsss = `https://fdez-dev.s3.us-west-1.amazonaws.com/${params.Key}`;
 
   console.log(urlsss);
+
 
 
   getProduc.products.create(
@@ -78,27 +79,28 @@ const produc_create = async function (req, res, upload) {
     .catch((err) => {
       console.log(err);
     });
-    
+
 };
 const Product_update = (req, res) => {
-  let id = req.body.id;
-  let name = req.file.originalname;
-  let description = req.body.description;
-  let price = req.body.price;
-  let amount = req.body.amount;
+  const id = req.body.id;
+  const name = req.file.originalname;
+  const nameProduc = req.body.nameProduc;
+  const description = req.body.description;
+  const price = req.body.price;
+  const amount = req.body.amount;
   getProduc.products
     .findOne({ where: { id: id } })
-
-    .then((r) => {
-      res.status(200).json({ message: "Deleted successfully" });
+    .then((product) => {
+      product.update({ name: name,nameProduc: nameProduc, description: description, price: price, amount: amount })
+      res.status(200).json({ successfully: 'Datos Actualizados' });
     })
     .catch((err) => {
-      res.status(400).send(err);
-    });
+      err.status(400).json({ err: 'Error al actualizar'});
+    })
 };
 
 const Product_delete = async function (req, res) {
-  let id = req.body.id;
+  const id = req.body.id;
   getProduc.products
     .destroy({ where: { id: id } })
     .then((r) => {
@@ -118,3 +120,4 @@ export const producController = {
   Product_delete,
 
 };
+

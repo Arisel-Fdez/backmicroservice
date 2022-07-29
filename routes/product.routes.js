@@ -63,7 +63,7 @@ router.post("/create", upload.single("name"), (req, res) =>
 /**
  * @openapi
  * '/api/product/update':
- *  put:
+ *  post:
  *     tags:
  *     - Product
  *     summary: actualizar Producto
@@ -76,6 +76,7 @@ router.post("/create", upload.single("name"), (req, res) =>
  *            required:
  *              -id
  *              - name
+ *              - nameProduc
  *              - description
  *              - price
  *              - amount
@@ -87,6 +88,9 @@ router.post("/create", upload.single("name"), (req, res) =>
  *                type: string
  *                format: binary
  *                default: img
+ *              nameProduc:
+ *                type: string
+ *                default: object
  *              description:
  *                type: string
  *                default: producto descripcion
@@ -104,7 +108,7 @@ router.post("/create", upload.single("name"), (req, res) =>
  *      404:
  *        description: Not Found
  */
-router.put("/update", upload.single("name"), (req, res) =>
+router.post("/update", upload.single("name"), (req, res) =>
   producController.Product_update(req, res, upload)
 );
 
@@ -155,20 +159,4 @@ router.delete("/delete", (req, res) =>
   producController.Product_delete(req, res, upload)
 );
 
-/**
- * @openapi
- * '/api/product/img':
- *  get:
- *     tags:
- *     - Product
- *     summary: visualizar img
- *     responses:
- *      200:
- *        description: update
- *      400:
- *        description: Bad Request
- *      404:
- *        description: Not Found
- */
- router.get("/img", (req, res) => producController.getImage(req, res));
 export default router;
